@@ -1,0 +1,549 @@
+package com.makewake.metaldetect
+
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Color
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import android.hardware.camera2.CameraAccessException
+import android.hardware.camera2.CameraManager
+import android.media.MediaPlayer
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.provider.Settings
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.WindowManager
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.android.material.snackbar.Snackbar
+import kotlin.math.pow
+import kotlin.math.sqrt
+
+
+class MainActivity : AppCompatActivity(), SensorEventListener {
+
+    private val MY_PERMISSIONS_REQUEST_CAMERA = 2
+
+    private var hasFlash = false
+    private var isLighOn = false
+    private var isVibrating = false
+    private var isBeeping = false
+    private var isMagnetometerEnabled: Boolean = false
+
+    private lateinit var sensorManager: SensorManager
+    private var magnetometer: Sensor? = null
+    private lateinit var textView: TextView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var progressBar1: ProgressBar
+    private lateinit var progressBar2: ProgressBar
+    private lateinit var magneticFieldStrengthTextView: TextView
+    private lateinit var vibrator: Vibrator
+    private lateinit var fab: FloatingActionButton
+    private lateinit var cardView: MaterialCardView
+    private lateinit var button: MaterialButton
+    private lateinit var accuracyTextView: TextView
+    private lateinit var vibrateButton: MaterialButton
+    private lateinit var beepButton: MaterialButton
+    private lateinit var mediaPlayer: MediaPlayer
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        fab = findViewById(R.id.floatingActionButton)
+        textView = findViewById(R.id.textView)
+        progressBar = findViewById(R.id.progressbar)
+        progressBar1 = findViewById(R.id.progressbar1)
+        progressBar2 = findViewById(R.id.progressbar2)
+        button = findViewById(R.id.button3)
+        magneticFieldStrengthTextView = findViewById(R.id.magneticFieldStrengthTextView)
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+        vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        accuracyTextView = findViewById(R.id.accuracyTextView)
+        vibrateButton = findViewById(R.id.vibrationButton)
+        beepButton = findViewById(R.id.beepButton)
+        mediaPlayer = MediaPlayer.create(this, R.raw.beepfast)
+
+
+        //if has sensor or none
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
+            //nothing
+        } else {
+            val builder = MaterialAlertDialogBuilder(this, R.style.CustomDialogTheme)
+            builder.setTitle(R.string.error_no_magnet_sensor)
+                .setMessage(R.string.error_no_magnet_sensor_desc)
+                .setIcon(R.drawable.warning)
+                .setCancelable(false)
+                .setNegativeButton(R.string.exit){ dialog, id ->
+                    finish()
+                }
+            builder.show()
+        }
+
+        //keepscreenonswitch
+        val coordinatorLayout = findViewById<CoordinatorLayout>(R.id.coordinator)
+        val keepScreenOnSwitch = findViewById<MaterialSwitch>(R.id.keepScrenOn_Switch)
+        keepScreenOnSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                Snackbar.make(coordinatorLayout, R.string.keeping_screen_on, Snackbar.LENGTH_SHORT)
+                    .show()
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                Snackbar.make(coordinatorLayout, R.string.keep_screen_on_disabled, Snackbar.LENGTH_SHORT)
+                    .show()
+            }
+        }
+
+
+        //vibration and beep buttons
+            beepButton.setOnClickListener {
+                isBeeping = !isBeeping
+                if (isBeeping) {
+                    beepButton.setIconResource(R.drawable.soundon_icon)
+                    startBeeping()
+                    Snackbar.make(coordinatorLayout, R.string.sound_on, Snackbar.LENGTH_SHORT)
+                        .show()
+                } else {
+                    beepButton.setIconResource(R.drawable.mute_button)
+                    stopBeeping()
+                    Snackbar.make(coordinatorLayout, R.string.sound_off, Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+            vibrateButton.setOnClickListener {
+                isVibrating = !isVibrating
+                if (isVibrating) {
+                    vibrateButton.setIconResource(R.drawable.vibration_button)
+                    startVibrating()
+                    Snackbar.make(coordinatorLayout, R.string.vibration_on, Snackbar.LENGTH_SHORT)
+                        .show()
+                } else {
+                    vibrateButton.setIconResource(R.drawable.vibrateoff)
+                    stopVibrating()
+                    Snackbar.make(coordinatorLayout, R.string.vibration_off, Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+
+        //material toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        //detection button
+        button.setOnClickListener {
+            if (isMagnetometerEnabled) {
+                stopBeeping()
+                sensorManager.unregisterListener(this)
+                isMagnetometerEnabled = false
+                button.text = getString(R.string.start_detection)
+                button.setIconResource(R.drawable.play_icon)
+            } else {
+                magnetometer?.let { sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME) }
+                isMagnetometerEnabled = true
+                button.text = getString(R.string.stop_detection)
+                button.setIconResource(R.drawable.stop_icon)
+            }
+        }
+
+        //floatingactionbutton
+        this.fab.setOnClickListener(
+            View.OnClickListener
+            {
+                if (this.isLighOn) {
+                    this.turnOffFlash()
+                    return@OnClickListener
+                }
+                this.turnOnFlash()
+            })
+
+        //if device has flash?
+        val hasSystemFeature: Boolean = this.packageManager.hasSystemFeature("android.hardware.camera.flash")
+        hasFlash = hasSystemFeature
+        if (!hasSystemFeature) {
+            val builder = MaterialAlertDialogBuilder(this, R.style.CustomDialogTheme)
+            builder.setTitle(R.string.error_no_magnet_sensor)
+            builder.setCancelable(true)
+            builder.setMessage(R.string.error_no_flashlight)
+            builder.setNegativeButton(
+                R.string.exit
+            ) { dialogInterface, i ->
+                dialogInterface.cancel()
+            }
+            builder.show()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        sensorManager.unregisterListener(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isMagnetometerEnabled) {
+            sensorManager.unregisterListener(this)
+            isMagnetometerEnabled = false
+            button.text = getString(R.string.start_detection)
+            button.setIconResource(R.drawable.play_icon)
+        } else {
+            magnetometer?.let { sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME) }
+            isMagnetometerEnabled = true
+            button.text = getString(R.string.stop_detection)
+            button.setIconResource(R.drawable.stop_icon)
+        }
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        stopBeeping()
+        turnOffFlash()
+        stopVibrating()
+        sensorManager.unregisterListener(this)
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        val accuracyText = when (accuracy) {
+            SensorManager.SENSOR_STATUS_ACCURACY_LOW -> "LOW"
+            SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> "MEDIUM"
+            SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> "HIGH"
+            else -> "UNRELIABLE"
+        }
+        if (sensor!!.type == Sensor.TYPE_MAGNETIC_FIELD){
+            accuracyTextView.text = getString(R.string.sensor_accuracy, accuracyText)
+        }
+            if (sensor.type == Sensor.TYPE_MAGNETIC_FIELD && accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
+                showCalibrationDialog(accuracyText)
+            }
+
+
+            if (sensor.type == Sensor.TYPE_MAGNETIC_FIELD && accuracy == SensorManager.SENSOR_STATUS_ACCURACY_LOW) {
+                showCalibrationDialog(accuracyText)
+            }
+    }
+
+    private fun showCalibrationDialog(accuracyText: String) {
+        val calibrationview = View.inflate(this, R.layout.calibrationview, null)
+        val builder = MaterialAlertDialogBuilder(this, R.style.CustomDialogTheme)
+        builder.setTitle(R.string.calibrate_sensor)
+            .setIcon(R.drawable.warning)
+            .setMessage(getString(R.string.calibration_message, accuracyText))
+            .setView(calibrationview)
+            .setCancelable(false)
+            .setPositiveButton(R.string.done) { dialog, id ->
+                dialog.dismiss()
+            }
+        builder.show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.drawer_menu, menu)
+        return true
+    }
+
+    //menu items
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+
+            //share menu item
+            R.id.nav_share -> {
+                var myVersionName: String? = "Not Available"
+                try {
+                    myVersionName = packageManager.getPackageInfo(packageName, 0).versionName
+                } catch (e: PackageManager.NameNotFoundException) {
+                    e.printStackTrace()
+                }
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.type = "text/plain"
+                val shareText = getString(R.string.share_text, myVersionName, getString(R.string.github_url))
+                intent.putExtra(Intent.EXTRA_TEXT, shareText)
+                startActivity(Intent.createChooser(intent, getString(R.string.share_app, myVersionName, myVersionName)))
+                return true
+            }
+
+            //about menu item
+            R.id.nav_about -> {
+                val aboutButton = View.inflate(this, R.layout.aboutbutton, null)
+                val button = aboutButton.findViewById<MaterialButton>(R.id.button)
+                val button2 = aboutButton.findViewById<MaterialButton>(R.id.button2)
+                val button3 = aboutButton.findViewById<MaterialButton>(R.id.button3)
+                val button4 = aboutButton.findViewById<MaterialButton>(R.id.button4)
+                val button5 = aboutButton.findViewById<MaterialButton>(R.id.button5)
+
+                button.setOnClickListener {
+                    val url = getString(R.string.github_url)
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    startActivity(intent)
+                }
+                button2.setOnClickListener {
+                    val url = getString(R.string.original_github_url)
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    startActivity(intent)
+                }
+                button3.setOnClickListener {
+                    val intent = Intent(Intent.ACTION_SENDTO)
+                    intent.data = Uri.parse("mailto:")
+                    try {
+                        startActivity(intent)
+                    } catch (e: ActivityNotFoundException) {
+                        Toast.makeText(this, R.string.error_email, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                button4.visibility = View.GONE
+                button5.visibility = View.GONE
+
+                var myVersionName: String? = "Not Available"
+                try {
+                    myVersionName = packageManager.getPackageInfo(packageName, 0).versionName
+                } catch (e: PackageManager.NameNotFoundException) {
+                    e.printStackTrace()
+                }
+
+                val builder = MaterialAlertDialogBuilder(this, R.style.CustomDialogTheme)
+                builder.setTitle(getString(R.string.about_title))
+                    .setIcon(R.drawable.about_icon)
+                    .setView(aboutButton)
+                    .setCancelable(true)
+                    .setNegativeButton(R.string.close){ dialog, id ->
+                        dialog.cancel()
+                    }
+                builder.show()
+                return true
+            }
+            // Add more menu items as needed
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    //magnetometer sensor
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (event?.sensor?.type == Sensor.TYPE_MAGNETIC_FIELD) {
+            val magneticFieldStrength = sqrt(
+                event.values[0].toDouble().pow(2.0) +
+                        event.values[1].toDouble().pow(2.0) +
+                        event.values[2].toDouble().pow(2.0)
+            )
+
+            progressBar.progress = magneticFieldStrength.toInt()
+            progressBar.max = 200
+
+            //magnetometer display
+            cardView = findViewById(R.id.cardView)
+            if (magneticFieldStrength > 0){
+                magneticFieldStrengthTextView.text = "${magneticFieldStrength.toInt()}"
+            }
+
+
+            //magnetometer conditions
+            if (magneticFieldStrength > 50 && magneticFieldStrength < 100){
+                cardView.setCardBackgroundColor(ActivityCompat.getColor(this, R.color.orange))
+                textView.text = getString(R.string.metal_nearby)
+            }
+            else {
+                cardView.setCardBackgroundColor(Color.GRAY)
+                textView.text = getString(R.string.no_metal_detected)
+            }
+
+            if (magneticFieldStrength > 70 && magneticFieldStrength < 400) {
+                cardView.setCardBackgroundColor(ActivityCompat.getColor(this, R.color.red))
+                textView.text = getString(R.string.metal_detected)
+            }
+
+            if (magneticFieldStrength > 70 && isVibrating) {
+                startVibrating()
+            }else{
+                stopVibrating()
+            }
+
+
+            if (magneticFieldStrength > 70 && isBeeping) {
+                mediaPlayer.isLooping = true
+                startBeeping()
+            }else{
+                stopBeeping()
+            }
+
+            if (magneticFieldStrength > 400) {
+                progressBar1.max = 100
+                progressBar1.progress = 100
+                cardView.setCardBackgroundColor(ActivityCompat.getColor(this, R.color.red))
+                textView.text = getString(R.string.metal_detected)
+            }
+            else {
+                progressBar1.progress = 0
+            }
+
+            if (magneticFieldStrength > 800){
+                progressBar2.max = 100
+                progressBar2.progress = 100
+                cardView.setCardBackgroundColor(ActivityCompat.getColor(this, R.color.red))
+                textView.text = getString(R.string.metal_detected)
+            }
+            else{
+                progressBar2.progress = 0
+            }
+
+        }
+    }
+
+    //flash permission
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == MY_PERMISSIONS_REQUEST_CAMERA) {
+            if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+                turnOnFlash()
+            } else {
+                // Permission denied
+                val builder = MaterialAlertDialogBuilder(this, R.style.CustomDialogTheme)
+                builder.setTitle(R.string.permission_camera_title)
+                builder.setIcon(R.drawable.warning)
+                builder.setCancelable(false)
+                builder.setPositiveButton(
+                    R.string.allow_in_settings
+                ) { dialogInterface, i ->
+                    openAppSettings()
+                }
+                builder.show()
+            }
+        }
+    }
+
+
+    //beep
+    private fun startBeeping() {
+        if (!mediaPlayer.isPlaying) {
+            mediaPlayer.start()
+        }
+    }
+
+    private fun stopBeeping() {
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.stop()
+            mediaPlayer.release()
+            mediaPlayer = MediaPlayer.create(this, R.raw.beepfast)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopVibrating()
+        stopBeeping()
+    }
+
+    //vibration
+    private fun startVibrating() {
+        if (vibrator.hasVibrator()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val vibrationEffect = VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE)
+                vibrator.vibrate(vibrationEffect)
+            } else {
+                @Suppress("DEPRECATION")
+                vibrator.vibrate(100)
+            }
+        }
+    }
+
+
+    /*private fun startVibratingNear() {
+        if (vibrator.hasVibrator() && isMagnetometerEnabled) {
+            val pattern = longArrayOf(0, 50,50)
+            vibrator.vibrate(pattern,0)
+        }
+    }*/
+
+    private fun stopVibrating() {
+        vibrator.cancel()
+    }
+
+    //flashlight
+    private fun turnOnFlash() {
+        if (ContextCompat.checkSelfPermission(this, "android.permission.CAMERA") != 0) {
+            requestPermissions(arrayOf("android.permission.CAMERA"), 2)
+        } else
+            try {
+                var cameraManager = this.getSystemService(CAMERA_SERVICE) as CameraManager
+                if (!this.isLighOn) {
+                    this.fab.setImageResource(R.drawable.flashlight)
+                    cameraManager.setTorchMode(cameraManager.cameraIdList[0], true)
+                    this.isLighOn = true
+                    /*Toast.makeText(this, "Flashlight turned ON", Toast.LENGTH_SHORT).show()*/
+                }
+            } catch (e: CameraAccessException) {
+                Log.e("ContentValues", e.toString())
+            }
+    }
+    private fun turnOffFlash() {
+        try {
+            var cameraManager = this.getSystemService(CAMERA_SERVICE) as CameraManager
+            if (this.isLighOn) {
+                fab.setImageResource(R.drawable.flashlight_off)
+                cameraManager.setTorchMode(cameraManager.cameraIdList[0], false)
+                this.isLighOn = false
+                /*Toast.makeText(this, "Flashlight turned OFF", Toast.LENGTH_SHORT).show()*/
+            }
+        } catch (e: CameraAccessException) {
+            e.printStackTrace()
+        }
+    }
+
+
+    //open permission settings
+    private fun openAppSettings() {
+        val intent = Intent()
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        val uri = Uri.fromParts("package", packageName, null)
+        intent.data = uri
+        startActivity(intent)
+    }
+
+
+    //back pressed exit
+    @Suppress("DEPRECATION")
+    override fun onBackPressed() {
+        val builder = MaterialAlertDialogBuilder(this, R.style.CustomDialogTheme)
+        builder.setTitle(R.string.exit_app_title)
+            .setIcon(R.drawable.warning)
+            .setCancelable(true)
+            .setPositiveButton(R.string.yes){ dialog, id ->
+                finish()
+            }
+            .setNegativeButton(R.string.no){ dialog, id ->
+                dialog.cancel()
+            }
+        builder.show()
+    }
+
+}
+

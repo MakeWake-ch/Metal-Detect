@@ -1,0 +1,20 @@
+DisplayName: Metal Detect
+Summary: Turn your smartphone into a metal detector using the built-in magnetometer sensor.
+Description: Metal Detect is an open source Android application that uses your smartphone's built-in magnetometer sensor to detect metal objects. Simply move your phone near metal surfaces and the app will detect changes in the magnetic field.
+This app is a fork of the original Metal Detector app by Ian Baldwin Posedio, created with permission and gratitude for making the original code open source.
+Features:
+- Real-time magnetic field strength measurement in μT (microTesla)
+- Audio and haptic feedback when metal is detected
+- Support for most Android devices with magnetometer sensors
+- Light and dark theme support
+- Flashlight feature (if device has flash)
+Note: This app is designed for entertainment purposes only.
+License: GPL-3.0-or-later
+AuthorName: MakeWake
+AuthorEmail: https://github.com/MakeWake-ch/Metal-Detect
+Website: https://github.com/MakeWake-ch/Metal-Detect
+SourceCode: https://github.com/MakeWake-ch/Metal-Detect
+IssueTracker: https://github.com/MakeWake-ch/Metal-Detect/issues
+Categories:
+  - Utility
+  - Science

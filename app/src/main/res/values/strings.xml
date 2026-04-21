@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">Metal Detect</string>
+
+    <!-- Sensor messages -->
+    <string name="error_no_magnet_sensor">No Magnet Sensor!</string>
+    <string name="error_no_magnet_sensor_desc">Sorry but it looks like your device doesn\'t have a Magnetometer sensor. You cannot use this app.</string>
+    <string name="exit">Exit</string>
+    <string name="keeping_screen_on">Keeping Screen ON</string>
+    <string name="keep_screen_on_disabled">Keep Screen ON disabled</string>
+    <string name="sound_on">Sound ON</string>
+    <string name="sound_off">Sound OFF</string>
+    <string name="vibration_on">Vibration ON</string>
+    <string name="vibration_off">Vibration OFF</string>
+    <string name="start_detection">Start Detection</string>
+    <string name="stop_detection">Stop Detection</string>
+    <string name="error_no_flashlight">Sorry your device doesn\'t have a flashlight</string>
+
+    <!-- Calibration -->
+    <string name="calibrate_sensor">Calibrate Sensor</string>
+    <string name="calibration_message">The magnetometer sensor accuracy is %1$s. Please calibrate the sensor like in the image shown below (4 times).</string>
+    <string name="done">Done</string>
+
+    <!-- Detection status -->
+    <string name="sensor_accuracy">Sensor Accuracy: %1$s</string>
+    <string name="metal_nearby">Metal Nearby</string>
+    <string name="no_metal_detected">No metal detected</string>
+    <string name="metal_detected">Metal Detected</string>
+
+    <!-- Menu -->
+    <string name="share_app">Share %1$s v.%2$s</string>
+    <string name="rating_coming_soon">Rating App coming soon!</string>
+    <string name="error_email">Error to open email app</string>
+
+    <!-- Permissions -->
+    <string name="permission_camera_title">Please allow Camera permission so that you can use the flashlight.</string>
+    <string name="allow_in_settings">Allow in Settings</string>
+
+    <!-- Exit dialog -->
+    <string name="exit_app_title">Exit the App?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="close">Close</string>
+
+    <!-- About dialog -->
+    <string name="about_title">About Metal Detect</string>
+    <string name="about_description">Metal Detect v%1$s\nFork de l\'application Metal Detector originale.\n\nCette version est développée en Suisse par MakeWake.\n\nCréée grâce à OpenCode et MiniMax 2.5.\n\nBasée sur le travail de Ian Baldwin Posedio.</string>
+    <string name="about_made_in">Fait en Suisse avec ❤️</string>
+    <string name="about_powered_by">Propulsé par OpenCode + MiniMax 2.5</string>
+    <string name="original_app">App Originale</string>
+    <string name="send_feedback">Envoyer un Feedback</string>
+    <string name="report_bug">Signaler un Bug</string>
+    <string name="view_on_github">Voir sur GitHub</string>
+    <string name="github_url">https://github.com/MakeWake-ch/Metal-Detect</string>
+    <string name="original_github_url">https://github.com/ianposediooo/Metal-Detector-Android-App</string>
+
+    <!-- Share text -->
+    <string name="share_text">Découvrez Metal Detect v.%1$s sur GitHub!\n\n%2$s</string>
+
+    <!-- About dialog buttons -->
+    <string name="btn_view_source">Code Source (MakeWake)</string>
+    <string name="btn_original_app">App Originale (Ian)</string>
+    <string name="btn_contact">Contact</string>
+    <string name="btn_rate_app">Noter l\'App</string>
+</resources>
