@@ -1,5 +1,6 @@
 package com.makewake.metaldetect
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -7,6 +8,11 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 
 class SplashActivity : AppCompatActivity() {
+
+    override fun attachBaseContext(newBase: Context) {
+        val language = LocaleManager.getLanguage(newBase)
+        super.attachBaseContext(LocaleManager.setLocale(newBase, language))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

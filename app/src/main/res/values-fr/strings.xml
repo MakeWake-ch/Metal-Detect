@@ -5,7 +5,7 @@
     <string name="error_no_magnet_sensor">No Magnet Sensor!</string>
     <string name="error_no_magnet_sensor_desc">Sorry but it looks like your device doesn\'t have a Magnetometer sensor. You cannot use this app.</string>
     <string name="exit">Exit</string>
-    <string name="keeping_screen_on">Keeping Screen ON</string>
+    <string name="keeping_screen_on">Garder l\'écran allumé</string>
     <string name="keep_screen_on_disabled">Keep Screen ON disabled</string>
     <string name="sound_on">Sound ON</string>
     <string name="sound_off">Sound OFF</string>
@@ -21,13 +21,13 @@
     <string name="done">Done</string>
 
     <!-- Detection status -->
-    <string name="sensor_accuracy">Sensor Accuracy: %1$s</string>
-    <string name="accuracy_low">LOW</string>
-    <string name="accuracy_medium">MEDIUM</string>
-    <string name="accuracy_high">HIGH</string>
-    <string name="accuracy_unreliable">UNRELIABLE</string>
+    <string name="sensor_accuracy">Précision du Capteur: %1$s</string>
+    <string name="accuracy_low">FAIBLE</string>
+    <string name="accuracy_medium">MOYENNE</string>
+    <string name="accuracy_high">HAUTE</string>
+    <string name="accuracy_unreliable">NON FIABLE</string>
     <string name="metal_nearby">Metal Nearby</string>
-    <string name="no_metal_detected">No metal detected</string>
+    <string name="no_metal_detected">Aucun métal détecté</string>
     <string name="metal_detected">Metal Detected</string>
 
     <!-- Menu -->
@@ -47,16 +47,16 @@
     <string name="cancel">Cancel</string>
 
     <!-- About dialog -->
-    <string name="about_title">About Metal Detect</string>
-    <string name="about_description">Metal Detect v%1$s\nFork of the original Metal Detector app.\n\nCreated using OpenCode and MiniMax 2.5.\n\nBased on the work of Ian Baldwin Posedio.</string>
-    <string name="about_made_in">Made in Switzerland with ❤️</string>
-    <string name="about_powered_by">Created with OpenCode + MiniMax 2.5\nBased on the work of Ian Baldwin Posedio</string>
-    <string name="about_links">Links</string>
-    <string name="about_disclaimer">This app is for entertainment purposes only.</string>
-    <string name="original_app">Original App</string>
-    <string name="send_feedback">Send Feedback</string>
-    <string name="report_bug">Report Bug</string>
-    <string name="view_on_github">View on GitHub</string>
+    <string name="about_title">À propos de Metal Detect</string>
+    <string name="about_description">Metal Detect v%1$s\nUne application Android open source qui transforme votre smartphone en détecteur de métaux en utilisant le magnétomètre intégré.\n\nUtilisez le magnétomètre intégré de votre téléphone pour détecter les objets métalliques. Lorsque des objets métalliques sont à proximité, l\'intensité du champ magnétique augmente et l\'application fournit un retour visuel, audio et haptique.\n\nNote: Cette application est conçue à des fins de divertissement uniquement et ne doit pas être utilisée pour des activités sérieuses de détection de métaux.\n\nCette application est une fourche de l\'application Metal Detector originale créée par Ian Baldwin Posedio.\nCe programme est un logiciel libre: vous pouvez le redistribuer et/ou le modifier sous les termes de la GNU General Public License.</string>
+    <string name="about_made_in">Fait en Suisse avec ❤️</string>
+    <string name="about_powered_by">Créé avec OpenCode + MiniMax 2.5\nBasé sur le travail de Ian Baldwin Posedio</string>
+    <string name="about_links">Liens</string>
+    <string name="about_disclaimer">Cette application est destinée uniquement à des fins de divertissement.</string>
+    <string name="original_app">App Originale</string>
+    <string name="send_feedback">Envoyer un Feedback</string>
+    <string name="report_bug">Signaler un Bug</string>
+    <string name="view_on_github">Voir sur GitHub</string>
     <string name="github_url">https://github.com/MakeWake-ch/Metal-Detect</string>
     <string name="original_github_url">https://github.com/ianposediooo/Metal-Detector-Android-App</string>
 
@@ -70,14 +70,14 @@
     <string name="btn_rate_app">Noter l\'App</string>
 
     <!-- Language selection -->
-    <string name="select_language">Select Language</string>
+    <string name="select_language">Sélectionner la langue</string>
     <string name="language_french">Français</string>
     <string name="language_english">English</string>
     <string name="language_spanish">Español</string>
     <string name="language_chinese">中文</string>
-    <string name="language_changed">Language changed</string>
-    <string name="app_needs_restart">Please restart the app to apply changes</string>
-    <string name="welcome_title">Welcome to Metal Detect</string>
-    <string name="welcome_message">Please select your language</string>
-    <string name="continue_btn">Continue</string>
+    <string name="language_changed">Langue modifiée</string>
+    <string name="app_needs_restart">Veuillez redémarrer l\'application pour appliquer les changements</string>
+    <string name="welcome_title">Bienvenue sur Metal Detect</string>
+    <string name="welcome_message">Veuillez sélectionner votre langue</string>
+    <string name="continue_btn">Continuer</string>
 </resources>

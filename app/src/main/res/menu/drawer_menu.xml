@@ -4,6 +4,12 @@
     <group android:enabled="true" android:visible="true">
 
         <item
+            android:id="@+id/nav_language"
+            android:icon="@drawable/language"
+            android:title="Language"
+            android:orderInCategory="0"
+            app:showAsAction="ifRoom" />
+        <item
             android:id="@+id/nav_share"
             android:icon="@drawable/share"
             android:title="Share"

@@ -38,7 +38,7 @@
         <TextView
             app:layout_constraintStart_toStartOf="@id/progressCardView"
             app:layout_constraintTop_toBottomOf="@id/progressCardView"
-            android:text="00μT"
+            android:text="00"
             android:textSize="10sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -126,17 +126,6 @@
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:text="Sensor Accuracy: UNKNOWN"
-        android:textColor="?attr/colorOnSurface"
-        android:textSize="18sp"
-        android:id="@+id/accuracyTextView"
-        android:layout_marginTop="30dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/progressCardView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
 
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -148,7 +137,6 @@
         android:gravity="start"
         android:minHeight="?attr/actionBarSize"
         app:menu="@menu/drawer_menu"
-        app:navigationIcon="@mipmap/ic_launcher_foreground"
         app:title="@string/app_name"
         app:titleCentered="true"
         app:titleTextColor="?attr/colorOnPrimary"/>
@@ -177,7 +165,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="28dp"
             android:gravity="center"
-            android:text="Start Detection"
+            android:text="@string/start_detection"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -190,9 +178,9 @@
             android:layout_centerHorizontal="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="μT: microTesla"
             android:textSize="18sp"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginBottom="30dp"
+            android:id="@+id/accuracyTextView"/>
 
     <LinearLayout
         android:layout_below="@id/textView"
@@ -226,15 +214,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/accuracyTextView"
-        android:layout_marginTop="30dp"
+        android:layout_below="@+id/cardView"
+        android:layout_marginTop="110dp"
         android:id="@+id/buttons">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="70dp"
-            android:text="Start Detection"
+            android:text="@string/start_detection"
             android:textSize="18sp"
             app:icon="@drawable/play_icon"
             app:iconSize="40dp"
@@ -274,7 +262,7 @@
         android:id="@+id/keepScrenOn_Switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Keep Screen ON"
+        android:text="@string/keeping_screen_on"
         android:textSize="14sp"
         android:layout_below="@+id/buttons"
         android:layout_centerHorizontal="true"/>

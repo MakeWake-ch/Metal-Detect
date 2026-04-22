@@ -40,6 +40,8 @@ import com.google.android.material.snackbar.Snackbar
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+private var currentLanguage: String = "en"
+
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
@@ -62,11 +64,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var fab: FloatingActionButton
     private lateinit var cardView: MaterialCardView
     private lateinit var button: MaterialButton
-    private lateinit var accuracyTextView: TextView
     private lateinit var vibrateButton: MaterialButton
     private lateinit var beepButton: MaterialButton
     private lateinit var mediaPlayer: MediaPlayer
 
+    override fun attachBaseContext(newBase: Context) {
+        val language = LocaleManager.getLanguage(newBase)
+        super.attachBaseContext(LocaleManager.setLocale(newBase, language))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,11 +87,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
         vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        accuracyTextView = findViewById(R.id.accuracyTextView)
         vibrateButton = findViewById(R.id.vibrationButton)
         beepButton = findViewById(R.id.beepButton)
         mediaPlayer = MediaPlayer.create(this, R.raw.beepfast)
 
+        currentLanguage = LocaleManager.getLanguage(this)
+        if (LocaleManager.isFirstLaunch(this)) {
+            showWelcomeLanguageDialog()
+        }
 
         //if has sensor or none
         if (sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
@@ -230,20 +238,17 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         val accuracyText = when (accuracy) {
-            SensorManager.SENSOR_STATUS_ACCURACY_LOW -> "LOW"
-            SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> "MEDIUM"
-            SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> "HIGH"
-            else -> "UNRELIABLE"
+            SensorManager.SENSOR_STATUS_ACCURACY_LOW -> getString(R.string.accuracy_low)
+            SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> getString(R.string.accuracy_medium)
+            SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> getString(R.string.accuracy_high)
+            else -> getString(R.string.accuracy_unreliable)
         }
-        if (sensor!!.type == Sensor.TYPE_MAGNETIC_FIELD){
-            accuracyTextView.text = getString(R.string.sensor_accuracy, accuracyText)
-        }
-            if (sensor.type == Sensor.TYPE_MAGNETIC_FIELD && accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
+            if (sensor?.type == Sensor.TYPE_MAGNETIC_FIELD && accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
                 showCalibrationDialog(accuracyText)
             }
 
 
-            if (sensor.type == Sensor.TYPE_MAGNETIC_FIELD && accuracy == SensorManager.SENSOR_STATUS_ACCURACY_LOW) {
+            if (sensor?.type == Sensor.TYPE_MAGNETIC_FIELD && accuracy == SensorManager.SENSOR_STATUS_ACCURACY_LOW) {
                 showCalibrationDialog(accuracyText)
             }
     }
@@ -271,6 +276,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
 
+            //language menu item
+            R.id.nav_language -> {
+                showLanguageDialog()
+                return true
+            }
+
             //share menu item
             R.id.nav_share -> {
                 var myVersionName: String? = "Not Available"
@@ -290,11 +301,25 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             //about menu item
             R.id.nav_about -> {
                 val aboutButton = View.inflate(this, R.layout.aboutbutton, null)
+                val titleText = aboutButton.findViewById<TextView>(R.id.titleText)
+                val descriptionText = aboutButton.findViewById<TextView>(R.id.descriptionText)
+                val disclaimerText = aboutButton.findViewById<TextView>(R.id.disclaimer)
                 val button = aboutButton.findViewById<MaterialButton>(R.id.button)
                 val button2 = aboutButton.findViewById<MaterialButton>(R.id.button2)
                 val button3 = aboutButton.findViewById<MaterialButton>(R.id.button3)
                 val button4 = aboutButton.findViewById<MaterialButton>(R.id.button4)
                 val button5 = aboutButton.findViewById<MaterialButton>(R.id.button5)
+
+                var myVersionName: String? = "Not Available"
+                try {
+                    myVersionName = packageManager.getPackageInfo(packageName, 0).versionName
+                } catch (e: PackageManager.NameNotFoundException) {
+                    e.printStackTrace()
+                }
+
+                titleText.text = getString(R.string.about_made_in)
+                descriptionText.text = getString(R.string.about_powered_by)
+                disclaimerText.text = getString(R.string.about_disclaimer)
 
                 button.setOnClickListener {
                     val url = getString(R.string.github_url)
@@ -309,9 +334,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     startActivity(intent)
                 }
                 button3.setOnClickListener {
-                    val intent = Intent(Intent.ACTION_SENDTO)
-                    intent.data = Uri.parse("mailto:")
                     try {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.makewake.metaldetect"))
                         startActivity(intent)
                     } catch (e: ActivityNotFoundException) {
                         Toast.makeText(this, R.string.error_email, Toast.LENGTH_SHORT).show()
@@ -320,19 +344,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 button4.visibility = View.GONE
                 button5.visibility = View.GONE
 
-                var myVersionName: String? = "Not Available"
-                try {
-                    myVersionName = packageManager.getPackageInfo(packageName, 0).versionName
-                } catch (e: PackageManager.NameNotFoundException) {
-                    e.printStackTrace()
-                }
-
                 val builder = MaterialAlertDialogBuilder(this, R.style.CustomDialogTheme)
                 builder.setTitle(getString(R.string.about_title))
-                    .setIcon(R.drawable.about_icon)
+                    
                     .setView(aboutButton)
                     .setCancelable(true)
-                    .setNegativeButton(R.string.close){ dialog, id ->
+                    .setNegativeButton(R.string.close){ dialog, _ ->
                         dialog.cancel()
                     }
                 builder.show()
@@ -543,6 +560,95 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 dialog.cancel()
             }
         builder.show()
+    }
+
+private fun showWelcomeLanguageDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.language_dialog, null)
+
+        val builder = MaterialAlertDialogBuilder(this, R.style.CustomDialogTheme)
+        builder.setTitle("Welcome / Bienvenue")
+            .setMessage("Select your language / Choisissez votre langue")
+            .setView(dialogView)
+            .setCancelable(false)
+
+        val dialog = builder.show()
+
+        dialogView.findViewById<MaterialButton>(R.id.btn_english).setOnClickListener {
+            LocaleManager.saveLanguage(this, "en")
+            LocaleManager.setFirstLaunchComplete(this)
+            dialog.dismiss()
+            recreate()
+        }
+        dialogView.findViewById<MaterialButton>(R.id.btn_french).setOnClickListener {
+            LocaleManager.saveLanguage(this, "fr")
+            LocaleManager.setFirstLaunchComplete(this)
+            dialog.dismiss()
+            recreate()
+        }
+        dialogView.findViewById<MaterialButton>(R.id.btn_spanish).setOnClickListener {
+            LocaleManager.saveLanguage(this, "es")
+            LocaleManager.setFirstLaunchComplete(this)
+            dialog.dismiss()
+            recreate()
+        }
+        dialogView.findViewById<MaterialButton>(R.id.btn_chinese).setOnClickListener {
+            LocaleManager.saveLanguage(this, "zh")
+            LocaleManager.setFirstLaunchComplete(this)
+            dialog.dismiss()
+            recreate()
+        }
+    }
+
+    private fun showLanguageDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.language_dialog, null)
+
+        val builder = MaterialAlertDialogBuilder(this, R.style.CustomDialogTheme)
+        builder.setTitle("Language")
+            .setView(dialogView)
+            .setCancelable(true)
+
+        val dialog = builder.show()
+
+        dialogView.findViewById<MaterialButton>(R.id.btn_english).setOnClickListener {
+            if ("en" != currentLanguage) {
+                LocaleManager.saveLanguage(this, "en")
+                currentLanguage = "en"
+                dialog.dismiss()
+                recreate()
+            } else {
+                dialog.dismiss()
+            }
+        }
+        dialogView.findViewById<MaterialButton>(R.id.btn_french).setOnClickListener {
+            if ("fr" != currentLanguage) {
+                LocaleManager.saveLanguage(this, "fr")
+                currentLanguage = "fr"
+                dialog.dismiss()
+                recreate()
+            } else {
+                dialog.dismiss()
+            }
+        }
+        dialogView.findViewById<MaterialButton>(R.id.btn_spanish).setOnClickListener {
+            if ("es" != currentLanguage) {
+                LocaleManager.saveLanguage(this, "es")
+                currentLanguage = "es"
+                dialog.dismiss()
+                recreate()
+            } else {
+                dialog.dismiss()
+            }
+        }
+        dialogView.findViewById<MaterialButton>(R.id.btn_chinese).setOnClickListener {
+            if ("zh" != currentLanguage) {
+                LocaleManager.saveLanguage(this, "zh")
+                currentLanguage = "zh"
+                dialog.dismiss()
+                recreate()
+            } else {
+                dialog.dismiss()
+            }
+        }
     }
 
 }

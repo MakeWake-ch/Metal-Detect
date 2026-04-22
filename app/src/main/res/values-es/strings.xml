@@ -1,0 +1,83 @@
+<resources>
+    <string name="app_name">Metal Detect</string>
+
+    <!-- Sensor messages -->
+    <string name="error_no_magnet_sensor">¡Sin Sensor Magnético!</string>
+    <string name="error_no_magnet_sensor_desc">Lo sentimos, pero su dispositivo no tiene un sensor magnetómetro. No puede usar esta aplicación.</string>
+    <string name="exit">Salir</string>
+    <string name="keeping_screen_on">Pantalla Encendida</string>
+    <string name="keep_screen_on_disabled">Pantalla Encendida desactivada</string>
+    <string name="sound_on">Sonido Activado</string>
+    <string name="sound_off">Sonido Desactivado</string>
+    <string name="vibration_on">Vibración Activada</string>
+    <string name="vibration_off">Vibración Desactivada</string>
+    <string name="start_detection">Iniciar Detección</string>
+    <string name="stop_detection">Detener Detección</string>
+    <string name="error_no_flashlight">Lo sentimos, su dispositivo no tiene linterna</string>
+
+    <!-- Calibration -->
+    <string name="calibrate_sensor">Calibrar Sensor</string>
+    <string name="calibration_message">La precisión del sensor magnetómetro es %1$s. Por favor calibre el sensor como se muestra en la imagen (4 veces).</string>
+    <string name="done">Hecho</string>
+
+    <!-- Detection status -->
+    <string name="sensor_accuracy">Precisión del Sensor: %1$s</string>
+    <string name="accuracy_low">BAJA</string>
+    <string name="accuracy_medium">MEDIA</string>
+    <string name="accuracy_high">ALTA</string>
+    <string name="accuracy_unreliable">NO CONFIABLE</string>
+    <string name="metal_nearby">Metal Cercano</string>
+    <string name="no_metal_detected">No se detectó metal</string>
+    <string name="metal_detected">Metal Detectado</string>
+
+    <!-- Menu -->
+    <string name="share_app">Compartir %1$s v.%2$s</string>
+    <string name="rating_coming_soon">¡Calificación pronto!</string>
+    <string name="error_email">Error al abrir la aplicación de correo</string>
+
+    <!-- Permissions -->
+    <string name="permission_camera_title">Por favor permita el permiso de cámara para usar la linterna.</string>
+    <string name="allow_in_settings">Permitir en Ajustes</string>
+
+    <!-- Exit dialog -->
+    <string name="exit_app_title">¿Salir de la Aplicación?</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="close">Cerrar</string>
+    <string name="cancel">Cancelar</string>
+
+    <!-- About dialog -->
+    <string name="about_title">Acerca de Metal Detect</string>
+    <string name="about_description">Metal Detect v%1$s\nUna aplicación Android de código abierto que transforma tu smartphone en un detector de metales utilizando el magnetómetro integrado.\n\nUtiliza el magnetómetro integrado de tu teléfono para detectar objetos metálicos. Cuando hay objetos metálicos cerca, la intensidad del campo magnético aumenta y la aplicación proporciona retroalimentación visual, de audio y háptica.\n\nNota: Esta aplicación está diseñada solo con fines de entretenimiento y no debe usarse para actividades serias de detección de metales.\n\nEsta aplicación es una bifurcación de la aplicación Metal Detector original creada por Ian Baldwin Posedio.\nEste programa es software libre: puedes redistribuirlo y/o modificarlo bajo los términos de la GNU General Public License.</string>
+    <string name="about_made_in">Hecho en Suiza con ❤️</string>
+    <string name="about_powered_by">Creado con OpenCode + MiniMax 2.5\nBasado en el trabajo de Ian Baldwin Posedio</string>
+    <string name="about_links">Enlaces</string>
+    <string name="about_disclaimer">Esta aplicación es solo para fines de entretenimiento.</string>
+    <string name="original_app">App Original</string>
+    <string name="send_feedback">Enviar Comentarios</string>
+    <string name="report_bug">Reportar Error</string>
+    <string name="view_on_github">Ver en GitHub</string>
+    <string name="github_url">https://github.com/MakeWake-ch/Metal-Detect</string>
+    <string name="original_github_url">https://github.com/ianposediooo/Metal-Detector-Android-App</string>
+
+    <!-- Share text -->
+    <string name="share_text">¡Descubre Metal Detect v.%1$s en GitHub!\n\n%2$s</string>
+
+    <!-- About dialog buttons -->
+    <string name="btn_view_source">Código Fuente (MakeWake)</string>
+    <string name="btn_original_app">App Original (Ian)</string>
+    <string name="btn_contact">Contacto</string>
+    <string name="btn_rate_app">Calificar App</string>
+
+    <!-- Language selection -->
+    <string name="select_language">Seleccionar Idioma</string>
+    <string name="language_french">Français</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_changed">Idioma cambiado</string>
+    <string name="app_needs_restart">Por favor reinicie la aplicación para aplicar los cambios</string>
+    <string name="welcome_title">Bienvenido a Metal Detect</string>
+    <string name="welcome_message">Por favor seleccione su idioma</string>
+    <string name="continue_btn">Continuar</string>
+</resources>

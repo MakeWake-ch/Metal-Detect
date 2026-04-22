@@ -1,0 +1,83 @@
+<resources>
+    <string name="app_name">金属探测</string>
+
+    <!-- Sensor messages -->
+    <string name="error_no_magnet_sensor">没有磁力传感器！</string>
+    <string name="error_no_magnet_sensor_desc">抱歉,您的设备没有磁力计传感器。您无法使用此应用。</string>
+    <string name="exit">退出</string>
+    <string name="keeping_screen_on">保持屏幕开启</string>
+    <string name="keep_screen_on_disabled">屏幕保持关闭</string>
+    <string name="sound_on">声音开启</string>
+    <string name="sound_off">声音关闭</string>
+    <string name="vibration_on">振动开启</string>
+    <string name="vibration_off">振动关闭</string>
+    <string name="start_detection">开始探测</string>
+    <string name="stop_detection">停止探测</string>
+    <string name="error_no_flashlight">抱歉,您的设备没有手电筒</string>
+
+    <!-- Calibration -->
+    <string name="calibrate_sensor">校准传感器</string>
+    <string name="calibration_message">磁力计传感器精度为%1$s。请按下图校准传感器(4次)。</string>
+    <string name="done">完成</string>
+
+    <!-- Detection status -->
+    <string name="sensor_accuracy">传感器精度: %1$s</string>
+    <string name="accuracy_low">低</string>
+    <string name="accuracy_medium">中</string>
+    <string name="accuracy_high">高</string>
+    <string name="accuracy_unreliable">不可靠</string>
+    <string name="metal_nearby">附近有金属</string>
+    <string name="no_metal_detected">未检测到金属</string>
+    <string name="metal_detected">检测到金属</string>
+
+    <!-- Menu -->
+    <string name="share_app">分享 %1$s v.%2$s</string>
+    <string name="rating_coming_soon">评分即将推出!</string>
+    <string name="error_email">打开邮件应用出错</string>
+
+    <!-- Permissions -->
+    <string name="permission_camera_title">请允许相机权限以使用手电筒。</string>
+    <string name="allow_in_settings">在设置中允许</string>
+
+    <!-- Exit dialog -->
+    <string name="exit_app_title">退出应用?</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="close">关闭</string>
+    <string name="cancel">取消</string>
+
+    <!-- About dialog -->
+    <string name="about_title">关于金属探测</string>
+    <string name="about_description">金属探测 v%1$s\n一款开源的Android应用程序，可将您的智能手机变成金属探测器，使用内置的磁力计传感器。\n\n使用手机内置的磁力计来检测金属物体。当金属物体靠近时，磁场强度会增加，应用程序会提供视觉、声音和触觉反馈。\n\n注意：此应用程序仅为娱乐目的设计，不应用于严肃的金属探测活动。\n\n此应用程序是由Ian Baldwin Posedio创建的原始金属探测器应用程序的分支。\n\n本程序是免费软件：您可以根据GNU通用公共许可证的条款重新分发和/或修改它。</string>
+    <string name="about_made_in">瑞士制造 ❤️</string>
+    <string name="about_powered_by">使用OpenCode + MiniMax 2.5创建\n基于Ian Baldwin Posedio的工作</string>
+    <string name="about_links">链接</string>
+    <string name="about_disclaimer">此应用程序仅用于娱乐目的。</string>
+    <string name="original_app">原始应用</string>
+    <string name="send_feedback">发送反馈</string>
+    <string name="report_bug">报告错误</string>
+    <string name="view_on_github">在GitHub上查看</string>
+    <string name="github_url">https://github.com/MakeWake-ch/Metal-Detect</string>
+    <string name="original_github_url">https://github.com/ianposediooo/Metal-Detector-Android-App</string>
+
+    <!-- Share text -->
+    <string name="share_text">在GitHub上发现金属探测 v.%1$s!\n\n%2$s</string>
+
+    <!-- About dialog buttons -->
+    <string name="btn_view_source">源代码 (MakeWake)</string>
+    <string name="btn_original_app">原始应用 (Ian)</string>
+    <string name="btn_contact">联系</string>
+    <string name="btn_rate_app">评价应用</string>
+
+    <!-- Language selection -->
+    <string name="select_language">选择语言</string>
+    <string name="language_french">Français</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_changed">语言已更改</string>
+    <string name="app_needs_restart">请重新启动应用以应用更改</string>
+    <string name="welcome_title">欢迎使用金属探测</string>
+    <string name="welcome_message">请选择您的语言</string>
+    <string name="continue_btn">继续</string>
+</resources>

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.MetalDetector" parent="Theme.Material3.Light.NoActionBar">
 
@@ -36,7 +36,6 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="android:navigationBarColor">?attr/colorSurface</item>
-
         <!-- Customize your theme here. -->
     </style>
 
@@ -48,7 +47,7 @@
     <style name="TitleStyle" parent="@style/MaterialAlertDialog.MaterialComponents.Title.Text.CenterStacked">
         <item name="android:maxLines">10</item>
         <item name="android:textAlignment">center</item>
-        <!--<item name="fontFamily">@font/productsans</item>-->
+        <item name="fontFamily">@font/productsans</item>
         <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textStyle">bold</item>
@@ -57,7 +56,7 @@
 
     <style name="MessageStyle" parent="@style/MaterialAlertDialog.Material3.Body.Text.CenterStacked">
         <item name="android:textAlignment">center</item>
-        <!--<item name="fontFamily">@font/productsans</item>-->
+        <item name="fontFamily">@font/productsans</item>
         <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">normal</item>
