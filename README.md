@@ -50,9 +50,7 @@ A huge thank you to Ian for:
 - Creating such a useful and well-designed application
 - Inspiring this fork
 
-### Icon
 
-Metal detector icon created by [Freepik](https://www.flaticon.com/free-icons/metal-detector) from Flaticon.
 
 ## License
 
